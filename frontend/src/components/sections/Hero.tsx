@@ -29,6 +29,19 @@ export function Hero() {
   const mouseY = useMotionValue(0.5)
   const videoRef = useRef<HTMLVideoElement>(null)
 
+  useEffect(() => {
+    setVideoReady(false)
+
+    const video = videoRef.current
+    if (!video) {
+      return
+    }
+
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      setVideoReady(true)
+    }
+  }, [setVideoReady])
+
   // Direct transformation for instant parallax without delay
   const x = useTransform(mouseX, [0, 1], ["2%", "-2%"])
   const y = useTransform(mouseY, [0, 1], ["2%", "-2%"])
@@ -87,8 +100,12 @@ export function Hero() {
         <video
           ref={videoRef}
           muted
+          preload="auto"
           playsInline
+          onLoadedData={() => setVideoReady(true)}
+          onCanPlay={() => setVideoReady(true)}
           onCanPlayThrough={() => setVideoReady(true)}
+          onError={() => setVideoReady(true)}
           onEnded={() => setIsVideoEnded(true)}
           onContextMenu={(e) => e.preventDefault()}
           controlsList="nodownload"

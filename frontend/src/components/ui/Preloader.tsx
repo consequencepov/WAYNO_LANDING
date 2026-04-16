@@ -18,24 +18,28 @@ export function Preloader() {
 
     const startLoading = () => {
       const duration = 2000 // min 2 seconds for aesthetic
+      const maxVideoWait = 4500
       const interval = 20 // update every 20ms
       const steps = duration / interval
       const isHome = location.pathname === '/'
+      const startedAt = Date.now()
 
       timer = setInterval(() => {
         currentStep++
         const easeProgress = easeOutExpo(currentStep / steps)
         const easePercent = Math.round(easeProgress * 100)
+        const elapsed = Date.now() - startedAt
+        const videoGateResolved = isVideoReady || elapsed >= maxVideoWait
         
         // Logic: Approach 90% purely on time.
         // Wait for videoReady to go to 100% only if we are on Home page.
         let currentProgress = Math.min(easePercent, 100)
         
-        if (easePercent > 90 && isHome && !isVideoReady) {
+        if (easePercent > 90 && isHome && !videoGateResolved) {
           currentProgress = 90
         }
 
-        const isFullyLoaded = isHome ? (easePercent >= 100 && isVideoReady) : (easePercent >= 100)
+        const isFullyLoaded = isHome ? (easePercent >= 100 && videoGateResolved) : (easePercent >= 100)
 
         if (isFullyLoaded) {
           setProgress(100)
