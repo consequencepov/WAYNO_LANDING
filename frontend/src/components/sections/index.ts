@@ -1,0 +1,6 @@
+export { Hero } from './Hero'
+export { Showreel } from './Showreel'
+export { ClientTrust } from './ClientTrust'
+export { Projects } from './Projects'
+export { Categories } from './Categories'
+export { Marquee } from './Marquee'

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /auth
+
+Host: wayno.ru
+Sitemap: https://wayno.ru/sitemap.xml

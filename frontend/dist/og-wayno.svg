@@ -1,0 +1,17 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0A0A0A"/>
+  <rect x="38" y="38" width="1124" height="554" rx="28" fill="url(#paint0_linear)" stroke="#2A2A2A"/>
+  <circle cx="1012" cy="150" r="140" fill="#C8CFA0" fill-opacity="0.1"/>
+  <circle cx="912" cy="486" r="180" fill="#FFFFFF" fill-opacity="0.04"/>
+  <path d="M104 494L248 162H316L460 494H390L359 419H204L174 494H104ZM229 359H334L281 233L229 359Z" fill="#F8F8F2"/>
+  <path d="M509 202H591C713 202 797 259 797 347C797 435 713 492 591 492H509V202ZM579 261V433H591C673 433 726 399 726 347C726 295 673 261 591 261H579Z" fill="#F8F8F2"/>
+  <path d="M846 202H916L1048 390V202H1116V492H1046L914 304V492H846V202Z" fill="#F8F8F2"/>
+  <text x="104" y="116" fill="#C8CFA0" font-family="Arial, Helvetica, sans-serif" font-size="28" letter-spacing="8">WAYNO</text>
+  <text x="104" y="558" fill="#D4D4D4" font-family="Arial, Helvetica, sans-serif" font-size="34">AI-платформа для создания сайтов, лендингов и проверки гипотез</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="92" y1="74" x2="1114" y2="554" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111111"/>
+      <stop offset="1" stop-color="#171717"/>
+    </linearGradient>
+  </defs>
+</svg>
