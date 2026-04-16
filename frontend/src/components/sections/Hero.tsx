@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { LogoToggle } from '@/components/ui/LogoToggle'
 import { PromptInput } from '@/components/ui/PromptInput'
 import { ScrollIndicator } from '@/components/ui/ScrollIndicator'
@@ -23,14 +23,27 @@ const fadeUp = {
 }
 
 export function Hero() {
-  const { brandMode } = useStore()
+  const { brandMode, setVideoReady, startVideo } = useStore()
   const [isVideoEnded, setIsVideoEnded] = useState(false)
   const mouseX = useMotionValue(0.5)
   const mouseY = useMotionValue(0.5)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   // Direct transformation for instant parallax without delay
   const x = useTransform(mouseX, [0, 1], ["2%", "-2%"])
   const y = useTransform(mouseY, [0, 1], ["2%", "-2%"])
+
+  useEffect(() => {
+    if (startVideo && videoRef.current) {
+      videoRef.current.currentTime = 0
+      const playPromise = videoRef.current.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.warn("Video auto-play was prevented:", error)
+        })
+      }
+    }
+  }, [startVideo])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -72,10 +85,13 @@ export function Hero() {
         className="absolute inset-0 w-full h-full z-0"
       >
         <video
-          autoPlay
+          ref={videoRef}
           muted
           playsInline
+          onCanPlayThrough={() => setVideoReady(true)}
           onEnded={() => setIsVideoEnded(true)}
+          onContextMenu={(e) => e.preventDefault()}
+          controlsList="nodownload"
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source src="/hero-bg.mp4" type="video/mp4" />

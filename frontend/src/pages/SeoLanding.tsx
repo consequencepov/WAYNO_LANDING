@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, Check, ChevronDown, Sparkles } from 'lucide-react'
+import { ArrowRight, ChevronDown, CheckCircle2, Zap, Layers } from 'lucide-react'
 import { CtaModal } from '@/components/ui'
 import { Seo } from '@/components/seo/Seo'
 import { type SeoLandingPage, getSeoLandingBySlug } from '@/constants/seoLandings'
 import { SITE } from '@/constants/site'
+import { cn } from '@/lib/cn'
 
 type SeoLandingProps = {
   slug: string
@@ -83,227 +84,238 @@ export function SeoLanding({ slug }: SeoLandingProps) {
         keywords={page.keywords}
         structuredData={structuredData}
       />
-      <main className="relative min-h-screen overflow-hidden bg-[#0a0a0a] pt-28 pb-20 md:pb-28">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(200,207,160,0.12),transparent_28%),radial-gradient(circle_at_85%_18%,rgba(255,255,255,0.08),transparent_24%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:96px_96px] opacity-20 [mask-image:radial-gradient(circle_at_top,#000_40%,transparent_86%)]" />
+      <main className="relative min-h-screen overflow-hidden bg-black pt-32 pb-24 font-sans selection:bg-white/30">
+        
+        {/* Apple-style background: deep black with subtle cinematic gradient */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-[2000px] pointer-events-none">
+           <div className="absolute -top-[40%] left-1/2 -translate-x-1/2 w-[120%] h-[1000px] bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.06),transparent_70%)]" />
+           <div className="absolute top-[20%] left-0 w-full h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(200,207,160,0.03),transparent_60%)]" />
+        </div>
 
-        <section className="relative px-6 md:px-12 lg:px-16">
-          <div className="max-w-[1280px] mx-auto grid grid-cols-1 xl:grid-cols-[minmax(0,1.1fr)_420px] gap-8 xl:gap-10 items-start">
+        {/* HERO SECTION */}
+        <section className="relative z-10 px-6 md:px-12 lg:px-16 max-w-[1280px] mx-auto">
+          <div className="flex flex-col items-center text-center">
             <motion.div
-              initial={{ opacity: 0, y: 28 }}
+              initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative overflow-hidden rounded-[36px] border border-white/10 bg-white/[0.03] px-6 py-8 sm:px-8 sm:py-10 md:px-10 md:py-12"
+              className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-md mb-8 shadow-[0_0_20px_rgba(255,255,255,0.02)]"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(200,207,160,0.16),transparent_34%)]" />
-              <div className="relative">
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="rounded-full border border-accent/25 bg-accent/10 px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-accent">
-                    {page.eyebrow}
-                  </span>
-                  <span className="rounded-full border border-white/10 px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-white/45">
-                    {page.badge}
-                  </span>
-                </div>
-
-                <h1 className="mt-7 max-w-[14ch] text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.94] tracking-[-0.05em] text-white font-medium">
-                  {page.headline}
-                </h1>
-
-                <p className="mt-6 max-w-2xl text-[16px] md:text-[18px] leading-relaxed text-white/64">
-                  {page.lead}
-                </p>
-
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <button
-                    onClick={() => setIsCtaOpen(true)}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-all duration-300 hover:bg-accent hover:text-black"
-                  >
-                    Запустить с WAYNO
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                  <Link
-                    to="/pricing"
-                    className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm text-white/78 transition-colors duration-300 hover:border-accent/35 hover:text-white"
-                  >
-                    Посмотреть тарифы
-                  </Link>
-                </div>
-
-                <div className="mt-10 flex flex-wrap gap-2.5">
-                  {page.audience.map((item) => (
-                    <span key={item} className="rounded-full border border-white/10 px-3.5 py-2 text-[11px] uppercase tracking-[0.18em] text-white/48">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              <Zap className="w-4 h-4 text-white/70" />
+              <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/70">
+                {page.badge} • {page.eyebrow}
+              </span>
             </motion.div>
 
-            <motion.aside
-              initial={{ opacity: 0, y: 36 }}
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="grid gap-4"
+              className="max-w-[18ch] text-[clamp(3.5rem,7vw,6.5rem)] leading-[1] tracking-[-0.04em] text-white font-medium"
             >
-              <div className="overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.03] p-6">
-                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-accent">
-                  <Sparkles className="h-4 w-4" />
-                  Wayno fit
-                </div>
-                <div className="mt-5 space-y-3">
-                  {page.proofPoints.map((item) => (
-                    <div key={item} className="flex items-start gap-3 rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
-                      <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
-                      <p className="text-sm leading-relaxed text-white/70">{item}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {page.headline}
+            </motion.h1>
 
-              <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6">
-                <div className="text-[11px] uppercase tracking-[0.3em] text-white/35">Search Intent</div>
-                <p className="mt-4 text-[1.45rem] leading-[1.08] tracking-[-0.03em] text-white">
-                  Страница собрана под конкретный кластер запросов и усилена внутренней перелинковкой.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {page.keywords.map((item) => (
-                    <span key={item} className="rounded-full border border-white/10 px-3 py-1.5 text-[11px] text-white/55">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.aside>
-          </div>
-        </section>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 max-w-2xl text-[17px] md:text-[20px] leading-relaxed text-white/50"
+            >
+              {page.lead}
+            </motion.p>
 
-        <section className="relative px-6 md:px-12 lg:px-16 mt-8 md:mt-10">
-          <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {page.outcomes.map((item, index) => (
-              <motion.article
-                key={item.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.55, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
-                className="rounded-[28px] border border-white/8 bg-white/[0.025] p-6 md:p-7"
+            <motion.div 
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+               className="mt-12 flex flex-col sm:flex-row items-center gap-4"
+            >
+              <button
+                onClick={() => setIsCtaOpen(true)}
+                className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full bg-white px-8 py-4 text-[15px] font-medium text-black transition-all duration-500 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]"
               >
-                <div className="text-[11px] uppercase tracking-[0.28em] text-white/28">Outcome {index + 1}</div>
-                <h2 className="mt-5 text-[1.6rem] leading-[1.05] tracking-[-0.03em] text-white">{item.title}</h2>
-                <p className="mt-4 text-sm md:text-[15px] leading-relaxed text-white/62">{item.description}</p>
-              </motion.article>
-            ))}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative z-10 flex items-center gap-2">
+                  Начать проект
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </button>
+            </motion.div>
           </div>
+
+          {/* Визуальная композиция: Apple-style proof points (Glass Pills) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-20 lg:mt-28 flex flex-wrap justify-center gap-4 max-w-4xl mx-auto"
+          >
+            {page.proofPoints.map((item, i) => (
+              <div key={i} className="flex items-center gap-3 rounded-[20px] border border-white/10 bg-white/[0.02] backdrop-blur-2xl px-5 py-3 shadow-xl transition-colors hover:bg-white/[0.04]">
+                <CheckCircle2 className="h-4 w-4 text-white/40" />
+                <span className="text-[14px] font-medium text-white/70">{item}</span>
+              </div>
+            ))}
+          </motion.div>
         </section>
 
-        <section className="relative px-6 md:px-12 lg:px-16 mt-16 md:mt-20">
-          <div className="max-w-[1280px] mx-auto rounded-[36px] border border-white/10 bg-white/[0.02] p-6 md:p-8 lg:p-10">
-            <div className="max-w-2xl">
-              <div className="text-[11px] uppercase tracking-[0.34em] text-white/35">Wayno workflow</div>
-              <h2 className="mt-5 text-[clamp(2rem,4vw,3.8rem)] leading-[0.97] tracking-[-0.04em] text-white">
-                Как это проходит внутри платформы.
+        {/* OUTCOMES - Плавная инфографика-ось */}
+        <section className="relative z-10 px-6 md:px-12 lg:px-16 mt-32">
+          <div className="max-w-[1000px] mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-[clamp(2.5rem,4vw,3.5rem)] leading-tight tracking-[-0.03em] text-white">
+                Результаты и метрики
               </h2>
             </div>
-
-            <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
-              {page.workflow.map((item, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+              {/* Фоновая соединительная линия */}
+              <div className="hidden md:block absolute top-[40px] left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              
+              {page.outcomes.map((item, index) => (
                 <motion.div
-                  key={item.step}
-                  initial={{ opacity: 0, y: 24 }}
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.55, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                  className="rounded-[28px] border border-white/8 bg-black/20 p-6"
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative group text-center px-4"
                 >
-                  <div className="text-[2.4rem] leading-none tracking-[-0.06em] text-accent">{item.step}</div>
-                  <h3 className="mt-5 text-[1.3rem] leading-[1.08] tracking-[-0.03em] text-white">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-white/60">{item.description}</p>
+                  <div className="w-20 h-20 mx-auto rounded-full bg-white/[0.02] border border-white/10 backdrop-blur-xl flex items-center justify-center mb-6 shadow-[inset_0_4px_20px_rgba(255,255,255,0.05)] transition-transform duration-500 group-hover:scale-110 group-hover:bg-white/[0.05]">
+                     <span className="text-xl font-mono text-white/80">0{index + 1}</span>
+                  </div>
+                  <h3 className="text-[1.3rem] leading-snug tracking-[-0.02em] text-white font-medium mb-3">{item.title}</h3>
+                  <p className="text-[14px] leading-relaxed text-white/50">{item.description}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative px-6 md:px-12 lg:px-16 mt-16 md:mt-20">
-          <div className="max-w-[1280px] mx-auto grid grid-cols-1 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] gap-8 xl:gap-10 items-start">
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.34em] text-white/35">FAQ / Search Depth</div>
-              <h2 className="mt-5 text-[clamp(2rem,4vw,3.5rem)] leading-[0.98] tracking-[-0.04em] text-white">
-                Вопросы, которые реально задают перед запуском.
-              </h2>
-              <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-white/58">
-                Этот блок нужен и людям, и поисковым системам: он расширяет семантику страницы и закрывает сомнения перед действием.
-              </p>
-            </div>
+        {/* WORKFLOW - Графический пайплайн */}
+        <section className="relative z-10 px-6 md:px-12 lg:px-16 mt-32 lg:mt-48">
+          <div className="max-w-[1280px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-24 items-center">
+              <div>
+                <Layers className="w-10 h-10 text-white/30 mb-8" />
+                <h2 className="text-[clamp(2.5rem,4vw,3.5rem)] leading-[1.05] tracking-[-0.03em] text-white">
+                  Архитектура процесса
+                </h2>
+                <p className="mt-6 text-[17px] leading-relaxed text-white/50 max-w-sm">
+                  WAYNO выстраивает прозрачный pipeline: от первых гипотез до продакшн-ready структуры, которая масштабируется вместе с бизнесом.
+                </p>
+              </div>
 
-            <div className="space-y-3">
-              {page.faq.map((item, index) => {
-                const isOpen = openFaqIndex === index
-                return (
-                  <div key={item.question} className="overflow-hidden rounded-[24px] border border-white/8 bg-white/[0.025]">
-                    <button
-                      onClick={() => setOpenFaqIndex(isOpen ? -1 : index)}
-                      className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left"
-                    >
-                      <span className="text-[1rem] md:text-[1.08rem] leading-snug text-white">{item.question}</span>
-                      <ChevronDown className={`h-5 w-5 flex-shrink-0 text-white/45 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                          className="overflow-hidden"
-                        >
-                          <div className="px-5 pb-5 text-sm leading-relaxed text-white/62">{item.answer}</div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                )
-              })}
+              <div className="flex flex-col gap-6">
+                {page.workflow.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    className="group relative flex gap-6 p-8 rounded-[32px] border border-white/5 bg-white/[0.015] backdrop-blur-lg hover:bg-white/[0.03] transition-colors duration-500"
+                  >
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full border border-white/20 bg-white/5 flex items-center justify-center text-white/80 font-medium">
+                      {item.step}
+                    </div>
+                    <div>
+                      <h3 className="text-[1.3rem] leading-tight tracking-[-0.02em] text-white font-medium mb-2">{item.title}</h3>
+                      <p className="text-[15px] leading-relaxed text-white/50">{item.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="relative px-6 md:px-12 lg:px-16 mt-16 md:mt-20">
-          <div className="max-w-[1280px] mx-auto rounded-[36px] border border-accent/20 bg-[linear-gradient(180deg,rgba(200,207,160,0.08),rgba(255,255,255,0.02))] p-6 md:p-8 lg:p-10">
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-2xl">
-                <div className="text-[11px] uppercase tracking-[0.34em] text-accent">Related search paths</div>
-                <h2 className="mt-5 text-[clamp(1.9rem,4vw,3.4rem)] leading-[0.98] tracking-[-0.04em] text-white">
-                  Смежные страницы, которые расширяют охват и держат пользователя внутри структуры WAYNO.
-                </h2>
-              </div>
-              <button
-                onClick={() => setIsCtaOpen(true)}
-                className="self-start rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-medium text-black transition-colors duration-300 hover:bg-black hover:text-white"
-              >
-                Получить доступ
-              </button>
-            </div>
+        {/* FAQ */}
+        <section className="relative z-10 px-6 md:px-12 lg:px-16 mt-32">
+           <div className="max-w-[800px] mx-auto">
+             <div className="text-center mb-16">
+               <h2 className="text-[clamp(2rem,3vw,3rem)] leading-tight tracking-[-0.03em] text-white font-medium">
+                 Частые вопросы
+               </h2>
+             </div>
+             <div className="flex flex-col gap-3">
+               {page.faq.map((item, index) => {
+                  const isOpen = openFaqIndex === index
+                  return (
+                    <div key={index} className="overflow-hidden rounded-[24px] bg-white/[0.01] border border-white/5 backdrop-blur-md transition-colors hover:bg-white/[0.02]">
+                      <button
+                        onClick={() => setOpenFaqIndex(isOpen ? -1 : index)}
+                        className="flex w-full items-center justify-between gap-4 px-6 md:px-8 py-6 text-left"
+                      >
+                        <span className="text-[1.1rem] md:text-[1.2rem] text-white/90 font-medium">{item.question}</span>
+                        <div className={cn("w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-transform duration-500", isOpen && "rotate-180 bg-white/5")}>
+                           <ChevronDown className="w-4 h-4 text-white/60" />
+                        </div>
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                          >
+                            <div className="px-6 md:px-8 pb-8 text-[15px] leading-relaxed text-white/50">
+                              {item.answer}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+               })}
+             </div>
+           </div>
+        </section>
 
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
-              {relatedPages.map((item) => (
-                <Link
-                  key={item.slug}
-                  to={item.path}
-                  className="group rounded-[28px] border border-white/10 bg-black/20 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/20"
-                >
-                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/35">{item.eyebrow}</div>
-                  <h3 className="mt-4 text-[1.25rem] leading-[1.08] tracking-[-0.03em] text-white">{item.navLabel}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-white/58">{item.description}</p>
-                  <div className="mt-6 flex items-center gap-2 text-sm text-accent">
-                    Открыть страницу
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
+        {/* RELATED PAGES */}
+        <section className="relative z-10 px-6 md:px-12 lg:px-16 mt-32 lg:mt-40">
+           <div className="max-w-[1280px] mx-auto">
+             <div className="flex flex-col md:flex-row items-baseline justify-between gap-6 mb-12">
+               <h2 className="text-[clamp(2rem,3vw,3rem)] leading-tight tracking-[-0.03em] text-white font-medium max-w-xl">
+                  Глубокие экспертизы в смежных нишах
+               </h2>
+               <Link to="/" className="text-[13px] font-medium uppercase tracking-[0.1em] text-white/50 hover:text-white transition-colors">
+                  Все направления &rarr;
+               </Link>
+             </div>
+
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedPages.map((item) => (
+                  <Link
+                    key={item.slug}
+                    to={item.path}
+                    className="group relative flex flex-col p-8 rounded-[32px] border border-white/5 bg-white/[0.02] backdrop-blur-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:bg-white/[0.04]"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative z-10">
+                      <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-white/30 mb-6 group-hover:text-white/50 transition-colors">
+                        {item.badge}
+                      </div>
+                      <h3 className="text-[1.5rem] leading-tight tracking-[-0.02em] text-white mb-3 group-hover:text-white/90">
+                        {item.navLabel}
+                      </h3>
+                      <p className="text-[14px] leading-relaxed text-white/40 line-clamp-2">
+                        {item.description}
+                      </p>
+                      <div className="mt-8 pt-6 border-t border-white/5 w-full flex items-center justify-between">
+                         <span className="text-[12px] uppercase font-medium tracking-[0.1em] text-white/60">
+                           Подробнее
+                         </span>
+                         <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-transform duration-500 group-hover:translate-x-2 group-hover:bg-white/10">
+                           <ArrowRight className="w-4 h-4 text-white" />
+                         </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+             </div>
+           </div>
         </section>
 
         <CtaModal isOpen={isCtaOpen} onClose={() => setIsCtaOpen(false)} title="Запустить проект с WAYNO" />

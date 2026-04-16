@@ -7,12 +7,16 @@ interface AppState {
   isMenuOpen: boolean
   isAuthenticated: boolean
   promptText: string
+  isVideoReady: boolean
+  startVideo: boolean
   setPromptText: (text: string) => void
   toggleBrandMode: () => void
   setActiveCategory: (cat: ProjectCategory | 'all') => void
   toggleMenu: () => void
   closeMenu: () => void
   setAuthenticated: (status: boolean) => void
+  setVideoReady: (status: boolean) => void
+  setStartVideo: (status: boolean) => void
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -21,6 +25,8 @@ export const useStore = create<AppState>((set) => ({
   isMenuOpen: false,
   isAuthenticated: false,
   promptText: '',
+  isVideoReady: false,
+  startVideo: false,
   setPromptText: (text) => set({ promptText: text }),
   toggleBrandMode: () =>
     set((s) => ({
@@ -30,4 +36,6 @@ export const useStore = create<AppState>((set) => ({
   toggleMenu: () => set((s) => ({ isMenuOpen: !s.isMenuOpen })),
   closeMenu: () => set({ isMenuOpen: false }),
   setAuthenticated: (status) => set({ isAuthenticated: status }),
+  setVideoReady: (status) => set({ isVideoReady: status }),
+  setStartVideo: (status) => set({ startVideo: status }),
 }))

@@ -50,7 +50,7 @@ export function Footer() {
       {/* Info Grid */}
       <div className="border-t border-border-subtle">
         <div className="max-w-container mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12">
             <div>
               <h4 className="text-label uppercase tracking-widest text-content-muted mb-4">навигация</h4>
               <ul className="space-y-2">
@@ -64,22 +64,27 @@ export function Footer() {
               </ul>
             </div>
             <div>
-              <h4 className="text-label uppercase tracking-widest text-content-muted mb-4">время</h4>
-              <div className="space-y-1 text-body-sm text-content-secondary">
-                <p>MSK &mdash; Москва</p>
-                <p>GMT &mdash; Лондон</p>
-              </div>
+              <h4 className="text-label uppercase tracking-widest text-content-muted mb-4">документы</h4>
+              <ul className="space-y-2">
+                {FOOTER_LINKS.legal.map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="text-body-sm text-content-secondary hover:text-content-primary transition-colors duration-300 inline-flex items-center gap-1">
+                      {link.label} <ArrowUpRight size={12} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
             <div>
               <h4 className="text-label uppercase tracking-widest text-content-muted mb-4">контакты</h4>
-              <div className="space-y-1 text-body-sm text-content-secondary">
-                <a href={'mailto:' + SITE.email} className="block hover:text-content-primary transition-colors duration-300">{SITE.email}</a>
-                <p>{SITE.phone}</p>
+              <div className="space-y-3 text-body-sm text-content-secondary">
+                <a href={'mailto:' + SITE.email} className="block hover:text-content-primary transition-colors duration-300">hello@wayno.ru</a>
+                <p>ИП Трошков Данил Михайлович</p>
+                <div className="text-content-muted/60 space-y-1">
+                  <p>ОГРНИП: 326700000002342</p>
+                  <p>ИНН: 425202675538</p>
+                </div>
               </div>
-            </div>
-            <div>
-              <h4 className="text-label uppercase tracking-widest text-content-muted mb-4">офисы</h4>
-              <p className="text-body-sm text-content-secondary">{SITE.offices.join(' | ')}</p>
             </div>
           </div>
         </div>

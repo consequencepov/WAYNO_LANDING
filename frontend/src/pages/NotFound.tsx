@@ -1,18 +1,15 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Compass, SearchX } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Seo } from '@/components/seo/Seo'
+import { CtaModal } from '@/components/ui/CtaModal'
 
 const suggestedLinks = [
   {
     label: 'Главная WAYNO',
     href: '/',
     description: 'Вернуться к основному слою платформы и актуальным сценариям запуска.',
-  },
-  {
-    label: 'Тарифы',
-    href: '/pricing',
-    description: 'Открыть доступ и посмотреть, как WAYNO подключается к рабочему процессу.',
   },
   {
     label: 'AI-конструктор сайтов',
@@ -22,11 +19,13 @@ const suggestedLinks = [
 ]
 
 export function NotFound() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
     <>
       <Seo
         title="404 - Страница не найдена"
-        description="WAYNO: страница не найдена. Вернитесь на главную, откройте тарифы или перейдите к основным AI-страницам платформы."
+        description="WAYNO: страница не найдена. Вернитесь на главную или перейдите к основным AI-страницам платформы."
         path="/404.html"
         noindex
       />
@@ -61,7 +60,7 @@ export function NotFound() {
 
                 <p className="mt-6 max-w-2xl text-[16px] md:text-[18px] leading-relaxed text-white/64">
                   Похоже, адрес устарел или вёл в несуществующий сегмент. Вернитесь в рабочую
-                  навигацию WAYNO и продолжите путь через главную, тарифы или основные AI-страницы.
+                  навигацию WAYNO и продолжите путь через главную или основные AI-страницы.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
@@ -72,13 +71,13 @@ export function NotFound() {
                     <ArrowLeft className="h-4 w-4" />
                     На главную
                   </Link>
-                  <Link
-                    to="/pricing"
+                  <button
+                    onClick={() => setIsModalOpen(true)}
                     className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.03] px-6 py-3 text-sm text-white/78 transition-colors duration-300 hover:border-accent/35 hover:text-white"
                   >
-                    Посмотреть тарифы
+                    Отправить заявку
                     <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -117,6 +116,12 @@ export function NotFound() {
           </div>
         </section>
       </main>
+
+      <CtaModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Оставить заявку"
+      />
     </>
   )
 }

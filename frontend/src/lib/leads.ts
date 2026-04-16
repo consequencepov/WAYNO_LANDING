@@ -1,4 +1,3 @@
-import { getSupabaseBrowserClient } from '@/lib/supabase'
 import type { SubmitLeadInput } from '@/types'
 
 function normalizeText(value?: string | null) {
@@ -13,14 +12,13 @@ function getPageContext() {
   const url = new URL(window.location.href)
 
   return {
-    page_path: url.pathname,
-    page_url: url.href,
+    pagePath: url.pathname,
+    pageUrl: url.href,
     host: url.host,
   }
 }
 
 export async function submitLead(input: SubmitLeadInput) {
-  const supabase = getSupabaseBrowserClient()
   const source = normalizeText(input.source) || 'site_cta'
   const promptText = normalizeText(input.promptText)
   const attachedUrls = normalizeList(input.attachedUrls)
@@ -35,23 +33,25 @@ export async function submitLead(input: SubmitLeadInput) {
 
   const payload = {
     name,
-    contact_method: input.contactMethod,
-    phone: input.contactMethod === 'phone' ? contact : null,
-    email: input.contactMethod === 'email' ? contact.toLowerCase() : null,
+    contactMethod: input.contactMethod,
+    contact: input.contactMethod === 'email' ? contact.toLowerCase() : contact,
     source,
-    prompt_text: promptText,
-    attached_urls: attachedUrls,
-    attached_file_names: attachedFileNames,
-    selected_design: selectedDesign,
+    promptText,
+    attachedUrls,
+    attachedFileNames,
+    selectedDesign,
     ...getPageContext(),
   }
 
-  const { error } = await supabase
-    .from('leads')
-    .insert(payload)
+  const response = await fetch('/api/submit-lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
 
-  if (error) {
-    throw new Error(error.message)
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}))
+    throw new Error(body.error ?? `Request failed (${response.status})`)
   }
 
   return { success: true }

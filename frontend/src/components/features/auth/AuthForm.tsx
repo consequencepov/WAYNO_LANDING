@@ -1,14 +1,63 @@
 import { useState } from 'react'
 import { cn } from '@/lib/cn'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Check, AlertCircle, Loader2 } from 'lucide-react'
+import { getSupabaseBrowserClient } from '@/lib/supabase'
+
+type AuthStatus = 'idle' | 'loading' | 'sent' | 'error'
 
 export function AuthForm() {
   const [email, setEmail] = useState('')
   const [isFocused, setIsFocused] = useState(false)
+  const [status, setStatus] = useState<AuthStatus>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  /* ── Magic Link (email OTP) ── */
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // handle email login
+    const trimmed = email.trim().toLowerCase()
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setStatus('error')
+      setErrorMsg('Введите корректный email.')
+      return
+    }
+
+    setStatus('loading')
+    setErrorMsg('')
+
+    const supabase = getSupabaseBrowserClient()
+    const { error } = await supabase.auth.signInWithOtp({
+      email: trimmed,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth`,
+      },
+    })
+
+    if (error) {
+      setStatus('error')
+      setErrorMsg('Ошибка отправки. Попробуйте позже.')
+      return
+    }
+
+    setStatus('sent')
+  }
+
+  /* ── Yandex OAuth ── */
+  const handleYandexLogin = async () => {
+    setStatus('loading')
+    setErrorMsg('')
+
+    const supabase = getSupabaseBrowserClient()
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'yandex' as any, // Supabase custom provider
+      options: {
+        redirectTo: `${window.location.origin}/auth`,
+      },
+    })
+
+    if (error) {
+      setStatus('error')
+      setErrorMsg('Ошибка авторизации через Яндекс.')
+    }
   }
 
   return (
@@ -37,11 +86,14 @@ export function AuthForm() {
 
         <button
           type="button"
+          onClick={handleYandexLogin}
+          disabled={status === 'loading'}
           className={cn(
             "group relative w-full h-[60px] flex items-center justify-center gap-3",
             "bg-surface-elevated hover:bg-[#1f1f1f] border border-border-subtle",
             "rounded-2xl transition-all duration-300",
-            "overflow-hidden isolate"
+            "overflow-hidden isolate",
+            status === 'loading' && "opacity-60 pointer-events-none"
           )}
         >
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-accent/0 via-accent/5 to-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
@@ -57,44 +109,67 @@ export function AuthForm() {
           <div className="h-px w-full bg-gradient-to-l from-transparent via-border-subtle to-border-subtle" />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="relative group">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              placeholder="name@domain.com"
-              className={cn(
-                "w-full h-[60px] pl-5 pr-14 bg-[#0a0a0a] border rounded-2xl outline-none",
-                "text-content-primary text-body placeholder:text-content-muted",
-                "transition-all duration-500",
-                isFocused ? "border-accent/40 bg-accent/[0.02]" : "border-border-subtle hover:border-content-secondary/40",
-                "shadow-[inset_0_2px_16px_rgba(0,0,0,0.5)]"
-              )}
-            />
-            
-            <button
-              type="submit"
-              className={cn(
-                "absolute right-2 top-1/2 -translate-y-1/2",
-                "w-11 h-11 rounded-xl flex items-center justify-center",
-                "transition-all duration-300",
-                email.length > 3 && isFocused 
-                  ? "bg-accent text-surface-primary opacity-100 translate-x-0" 
-                  : "bg-surface-elevated text-content-muted opacity-50 cursor-not-allowed border border-border-subtle"
-              )}
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            
-            {/* Focus glow border */}
-            <div className={cn(
-              "absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-500 will-change-opacity",
-              isFocused ? "shadow-[0_0_20px_rgba(200,207,160,0.15)] opacity-100" : "opacity-0"
-            )} />
-          </div>
+        <form onSubmit={handleEmailSubmit} className="space-y-4">
+          {status === 'sent' ? (
+            <div className="flex items-center gap-3 p-4 rounded-2xl bg-accent/10 border border-accent/20">
+              <Check className="w-5 h-5 text-accent shrink-0" />
+              <p className="text-sm text-content-primary">
+                Ссылка для входа отправлена на <strong>{email}</strong>. Проверьте почту.
+              </p>
+            </div>
+          ) : (
+            <div className="relative group">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                placeholder="name@domain.com"
+                disabled={status === 'loading'}
+                className={cn(
+                  "w-full h-[60px] pl-5 pr-14 bg-[#0a0a0a] border rounded-2xl outline-none",
+                  "text-content-primary text-body placeholder:text-content-muted",
+                  "transition-all duration-500",
+                  isFocused ? "border-accent/40 bg-accent/[0.02]" : "border-border-subtle hover:border-content-secondary/40",
+                  "shadow-[inset_0_2px_16px_rgba(0,0,0,0.5)]",
+                  status === 'loading' && "opacity-60"
+                )}
+              />
+              
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className={cn(
+                  "absolute right-2 top-1/2 -translate-y-1/2",
+                  "w-11 h-11 rounded-xl flex items-center justify-center",
+                  "transition-all duration-300",
+                  email.length > 3 && isFocused 
+                    ? "bg-accent text-surface-primary opacity-100 translate-x-0" 
+                    : "bg-surface-elevated text-content-muted opacity-50 cursor-not-allowed border border-border-subtle"
+                )}
+              >
+                {status === 'loading' ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <ArrowRight className="w-5 h-5" />
+                )}
+              </button>
+              
+              {/* Focus glow border */}
+              <div className={cn(
+                "absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-500 will-change-opacity",
+                isFocused ? "shadow-[0_0_20px_rgba(200,207,160,0.15)] opacity-100" : "opacity-0"
+              )} />
+            </div>
+          )}
+
+          {status === 'error' && errorMsg && (
+            <div className="flex items-center gap-2 text-sm text-red-400">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              {errorMsg}
+            </div>
+          )}
         </form>
 
         <p className="text-[12px] text-content-secondary/60 text-center pt-2 leading-relaxed">

@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import type { ContactMethod } from '@/types'
 
+/* ── Database types ── */
+
 type LeadsRow = {
   id: string
   name: string
@@ -35,6 +37,8 @@ export interface Database {
   }
 }
 
+/* ── Singleton client (PKCE auth) ── */
+
 let browserClient: ReturnType<typeof createClient<Database>> | null = null
 
 function getSupabaseConfig() {
@@ -57,9 +61,11 @@ export function getSupabaseBrowserClient() {
 
   browserClient = createClient<Database>(url, publishableKey, {
     auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-      detectSessionInUrl: false,
+      flowType: 'pkce',
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+      storage: typeof window !== 'undefined' ? window.localStorage : undefined,
     },
   })
 

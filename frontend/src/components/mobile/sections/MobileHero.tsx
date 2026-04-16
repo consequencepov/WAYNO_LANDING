@@ -68,6 +68,8 @@ export function MobileHero() {
           muted
           loop
           playsInline
+          onContextMenu={(e) => e.preventDefault()}
+          controlsList="nodownload"
           className="absolute inset-0 w-full h-full object-cover scale-110 opacity-60"
         >
           <source src="/hero-bg.mp4" type="video/mp4" />
