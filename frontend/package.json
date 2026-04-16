@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build:spa": "tsc -b && vite build",
-    "build": "export PUPPETEER_EXECUTABLE_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' && npm run build:spa && react-snap",
+    "build": "tsc -b && vite build",
+    "build:prerender": "export PUPPETEER_EXECUTABLE_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' && npm run build:spa && react-snap",
     "lint": "eslint .",
     "preview": "vite preview"
   },
