@@ -3,6 +3,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/(yandex_35c6015ece2ed9b2\\.html)", "destination": "/yandex_35c6015ece2ed9b2.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [
