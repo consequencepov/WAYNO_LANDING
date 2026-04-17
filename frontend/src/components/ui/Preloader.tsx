@@ -17,8 +17,8 @@ export function Preloader() {
     let timer: NodeJS.Timeout
 
     const startLoading = () => {
-      const duration = 2000 // min 2 seconds for aesthetic
-      const maxVideoWait = 4500
+      const duration = 1200 // reduced from 2000ms for faster initial load
+      const maxVideoWait = 3000 // reduced from 4500ms
       const interval = 20 // update every 20ms
       const steps = duration / interval
       const isHome = location.pathname === '/'
@@ -49,7 +49,7 @@ export function Preloader() {
             setLoading(false)
             if (isHome) setStartVideo(true)
             document.body.style.overflow = ''
-          }, 800) // Hold at 100% for brief moment, then fade out
+          }, 400) // reduced from 800ms for faster interactive time
         } else {
           setProgress(currentProgress)
         }

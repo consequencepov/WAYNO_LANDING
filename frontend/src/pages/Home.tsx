@@ -1,15 +1,18 @@
+import { lazy, Suspense } from 'react';
 import { Hero } from '@/components/sections/Hero';
-import { SectionEditor } from '@/components/sections/SectionEditor';
-import { SectionTransformation } from '@/components/sections/SectionTransformation';
-import { SectionHandoff } from '@/components/sections/SectionHandoff';
-import { PinSectionPartners } from '@/components/sections/PinSectionPartners';
-import { SectionCTA } from '@/components/sections/SectionCTA';
-import { SeoCaseStudies } from '@/components/sections/SeoCaseStudies';
-import { SeoClusters } from '@/components/sections/SeoClusters';
 import { MobileHome } from '@/components/mobile/MobileHome';
 import { Seo } from '@/components/seo/Seo';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 import { SITE } from '@/constants/site';
+
+// Lazy-load below-fold sections to reduce initial bundle
+const SectionEditor = lazy(() => import('@/components/sections/SectionEditor').then(m => ({ default: m.SectionEditor })))
+const SectionTransformation = lazy(() => import('@/components/sections/SectionTransformation').then(m => ({ default: m.SectionTransformation })))
+const SectionHandoff = lazy(() => import('@/components/sections/SectionHandoff').then(m => ({ default: m.SectionHandoff })))
+const PinSectionPartners = lazy(() => import('@/components/sections/PinSectionPartners').then(m => ({ default: m.PinSectionPartners })))
+const SectionCTA = lazy(() => import('@/components/sections/SectionCTA').then(m => ({ default: m.SectionCTA })))
+const SeoCaseStudies = lazy(() => import('@/components/sections/SeoCaseStudies').then(m => ({ default: m.SeoCaseStudies })))
+const SeoClusters = lazy(() => import('@/components/sections/SeoClusters').then(m => ({ default: m.SeoClusters })))
 
 const homeStructuredData = {
   '@context': 'https://schema.org',
@@ -88,13 +91,15 @@ export function Home() {
       />
       <main className="relative overflow-hidden bg-[#0a0a0a]">
         <Hero />
-        <SectionEditor />
-        <SectionTransformation />
-        <SectionHandoff />
-        <PinSectionPartners />
-        <SeoCaseStudies />
-        <SeoClusters />
-        <SectionCTA />
+        <Suspense fallback={null}>
+          <SectionEditor />
+          <SectionTransformation />
+          <SectionHandoff />
+          <PinSectionPartners />
+          <SeoCaseStudies />
+          <SeoClusters />
+          <SectionCTA />
+        </Suspense>
       </main>
     </>
   )

@@ -16,17 +16,24 @@ export function SectionEditor() {
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
     
-    // Mouse movement only for desktop to avoid weird mobile bugs
+    // Mouse movement only for desktop, throttled to rAF
+    let rafId: number | null = null;
     const handleMouseMove = (e: MouseEvent) => {
-      if (window.innerWidth >= 1024) setMousePos({ x: e.clientX, y: e.clientY });
+      if (window.innerWidth < 1024) return;
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        setMousePos({ x: e.clientX, y: e.clientY });
+        rafId = null;
+      });
     };
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId !== null) cancelAnimationFrame(rafId);
     }
   }, []);
 

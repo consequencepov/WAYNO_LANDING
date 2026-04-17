@@ -1,9 +1,11 @@
+import { lazy, Suspense } from 'react'
 import { MobileHero } from './sections/MobileHero'
 import { MobileFeatures } from './sections/MobileFeatures'
 import { MobileCTA } from './sections/MobileCTA'
 import { MobilePartners } from './sections/MobilePartners'
-import { SeoCaseStudies } from '@/components/sections/SeoCaseStudies'
-import { SeoClusters } from '@/components/sections/SeoClusters'
+
+const SeoCaseStudies = lazy(() => import('@/components/sections/SeoCaseStudies').then(m => ({ default: m.SeoCaseStudies })))
+const SeoClusters = lazy(() => import('@/components/sections/SeoClusters').then(m => ({ default: m.SeoClusters })))
 
 export function MobileHome() {
   // Mobile Home completely overwrites the layout with an optimized stacked interface
@@ -12,8 +14,10 @@ export function MobileHome() {
       <MobileHero />
       <MobileFeatures />
       <MobilePartners />
-      <SeoCaseStudies compact />
-      <SeoClusters compact />
+      <Suspense fallback={null}>
+        <SeoCaseStudies compact />
+        <SeoClusters compact />
+      </Suspense>
       <MobileCTA />
     </main>
   )

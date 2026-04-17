@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ChevronRight, Hexagon, Code2, Globe2, Cpu } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -37,21 +37,41 @@ const AbstractGraphic = ({ index }: { index: number }) => {
 
 export function SeoCaseStudies({ compact = false }: SeoCaseStudiesProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const caseStudies = compact ? SEO_CASE_STUDIES.slice(0, 4) : SEO_CASE_STUDIES
-  const narratives = compact ? SEO_CASE_NARRATIVES.slice(0, 2) : SEO_CASE_NARRATIVES
+  const caseStudies = useMemo(() => compact ? SEO_CASE_STUDIES.slice(0, 4) : SEO_CASE_STUDIES, [compact])
+  const narratives = useMemo(() => compact ? SEO_CASE_NARRATIVES.slice(0, 2) : SEO_CASE_NARRATIVES, [compact])
   const [activeIndex, setActiveIndex] = useState(0)
+  const sectionRef = useRef<HTMLElement>(null)
 
-  // Переключение табов Apple-style: если пользователь не кликает, можно сделать автоплей
+  // Autoplay timer — only runs when section is visible in viewport
   useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % caseStudies.length)
-    }, 5000)
-    return () => clearInterval(timer)
+    const el = sectionRef.current
+    if (!el) return
+
+    let timer: ReturnType<typeof setInterval> | null = null
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          timer = setInterval(() => {
+            setActiveIndex((prev) => (prev + 1) % caseStudies.length)
+          }, 5000)
+        } else {
+          if (timer) { clearInterval(timer); timer = null }
+        }
+      },
+      { threshold: 0.1 }
+    )
+    observer.observe(el)
+
+    return () => {
+      observer.disconnect()
+      if (timer) clearInterval(timer)
+    }
   }, [caseStudies.length])
 
   return (
     <>
-      <section className="relative px-6 md:px-12 lg:px-16 py-24 md:py-32 overflow-hidden bg-black border-t border-white/5">
+      <section ref={sectionRef} className="relative px-6 md:px-12 lg:px-16 py-24 md:py-32 overflow-hidden bg-black border-t border-white/5">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_-20%,rgba(140,140,140,0.1),transparent_70%)] pointer-events-none" />
         
         <div className="relative max-w-[1280px] mx-auto z-10">

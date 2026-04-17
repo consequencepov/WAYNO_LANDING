@@ -16,9 +16,37 @@ export default defineConfig({
   },
   build: {
     sourcemap: false,
+    cssCodeSplit: true,
+    target: 'es2020',
+    minify: 'esbuild',
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks(id) {
+          // Vendor: React core + ReactDOM (keep together to avoid circular deps)
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/scheduler/')) {
+            return 'vendor-react'
+          }
+          // Vendor: Router
+          if (id.includes('react-router')) {
+            return 'vendor-router'
+          }
+          // Vendor: Framer Motion (heavy)
+          if (id.includes('framer-motion')) {
+            return 'vendor-motion'
+          }
+          // Vendor: Lenis smooth scroll
+          if (id.includes('node_modules/lenis')) {
+            return 'vendor-lenis'
+          }
+          // Vendor: Embla carousel
+          if (id.includes('embla-carousel')) {
+            return 'vendor-embla'
+          }
+          // Vendor: Supabase
+          if (id.includes('@supabase')) {
+            return 'vendor-supabase'
+          }
+        },
       },
     },
   },

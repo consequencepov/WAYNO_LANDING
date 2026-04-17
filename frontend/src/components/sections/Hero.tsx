@@ -59,14 +59,22 @@ export function Hero() {
   }, [startVideo])
 
   useEffect(() => {
+    let rafId: number | null = null
     const handleMouseMove = (e: MouseEvent) => {
       if (!isVideoEnded) return // Don't apply parallax until video ends
-      mouseX.set(e.clientX / window.innerWidth)
-      mouseY.set(e.clientY / window.innerHeight)
+      if (rafId !== null) return // Throttle to 1 update per frame
+      rafId = requestAnimationFrame(() => {
+        mouseX.set(e.clientX / window.innerWidth)
+        mouseY.set(e.clientY / window.innerHeight)
+        rafId = null
+      })
     }
 
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mousemove", handleMouseMove, { passive: true })
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      if (rafId !== null) cancelAnimationFrame(rafId)
+    }
   }, [mouseX, mouseY, isVideoEnded])
 
   const content = {
@@ -100,7 +108,7 @@ export function Hero() {
         <video
           ref={videoRef}
           muted
-          preload="auto"
+          preload="metadata"
           playsInline
           onLoadedData={() => setVideoReady(true)}
           onCanPlay={() => setVideoReady(true)}
