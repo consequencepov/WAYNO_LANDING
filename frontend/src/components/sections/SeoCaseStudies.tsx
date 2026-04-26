@@ -51,7 +51,7 @@ export function SeoCaseStudies({ compact = false }: SeoCaseStudiesProps) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           timer = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % caseStudies.length)
           }, 5000)
