@@ -2,6 +2,11 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/submit-lead.ts": {
+      "runtime": "@vercel/node@latest"
+    }
+  },
   "rewrites": [
     { "source": "/(yandex_35c6015ece2ed9b2\\.html)", "destination": "/yandex_35c6015ece2ed9b2.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }

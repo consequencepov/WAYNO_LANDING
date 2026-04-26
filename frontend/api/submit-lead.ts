@@ -139,9 +139,17 @@ function getSupabaseAdmin() {
  *  HANDLER
  * ─────────────────────────────────────────── */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGINS.includes(req.headers['origin'] ?? '') ? (req.headers['origin'] as string) : '')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+    return res.status(204).end()
+  }
+
   // Only POST allowed
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST')
+    res.setHeader('Allow', 'POST, OPTIONS')
     return res.status(405).json({ error: 'Method not allowed.' })
   }
 
